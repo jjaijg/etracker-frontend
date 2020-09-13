@@ -1,0 +1,19 @@
+.expense-card {
+  /* width: 18rem;
+  height: 18rem; */
+  cursor: pointer;
+}
+
+.expense-card-amount {
+  border: 4px solid deeppink;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.expense-card-text {
+  font-size: 1.9rem;
+  font-weight: 600;
+}
