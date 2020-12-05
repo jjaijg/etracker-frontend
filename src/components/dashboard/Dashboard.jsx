@@ -12,7 +12,7 @@ const Dashboard = (props) => {
   const dispatch = useDispatch();
   const {
     user: {
-      user: { token },
+      user: { username, token },
     },
     transaction: { transactions },
     message,
@@ -70,7 +70,8 @@ const Dashboard = (props) => {
 
   return (
     <Container fluid>
-      <h2>Dashboard</h2>
+      <h2>Hi, {username}</h2>
+      <hr />
       <Row>
         <Col className='col-12 my-3'>
           <h3>Income Overview</h3>
@@ -104,6 +105,7 @@ const Dashboard = (props) => {
           />
         </Col>
       </Row>
+      <hr />
       <Row>
         <Col className='col-12 my-3'>
           <h3>Expense Overview</h3>
@@ -137,6 +139,7 @@ const Dashboard = (props) => {
           />
         </Col>
       </Row>
+      <hr />
     </Container>
   );
 };

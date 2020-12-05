@@ -3,3 +3,4 @@ export * from './history';
 export * from './error-handler';
 export * from './generateHexCode';
 export * from './checkDate';
+export * from './splitTransactions';

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Line, Pie, Bar } from 'react-chartjs-2';
 import { genrateHexCode } from '../../helpers';
 
-const LineChart = ({ chartType, label, dataSource }) => {
+const LineChart = ({ dataSource, chartType, label, xLabel, yLabel }) => {
   const [data, setData] = useState({});
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const LineChart = ({ chartType, label, dataSource }) => {
               {
                 scaleLabel: {
                   display: true,
-                  labelString: 'Amount',
+                  labelString: yLabel,
                 },
               },
             ],
@@ -53,7 +53,7 @@ const LineChart = ({ chartType, label, dataSource }) => {
               {
                 scaleLabel: {
                   display: true,
-                  labelString: 'Transaction Date',
+                  labelString: xLabel,
                 },
               },
             ],

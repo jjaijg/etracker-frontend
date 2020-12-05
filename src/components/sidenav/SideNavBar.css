@@ -9,6 +9,7 @@
   width: 100%;
   cursor: pointer;
   top: 0;
+  user-select: none;
 }
 
 .brand-logo .nav-icon {

@@ -5,7 +5,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import './App.css';
 
-// import HomePage from './components/homepage';
+import Profile from './components/profile';
 import Register from './components/register';
 import Login from './components/login';
 import Dashboard from './components/dashboard';
@@ -35,6 +35,10 @@ import {
   faArrowRight,
   faTable,
   faHome,
+  faEdit,
+  faTrash,
+  faCheckCircle,
+  faUserCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { getUserDetails } from './state/action/userActions';
 import { removeMessage } from './state/reducer/messageReducer';
@@ -60,7 +64,11 @@ library.add(
   faTag,
   faFileInvoice,
   faTable,
-  faHome
+  faHome,
+  faEdit,
+  faTrash,
+  faCheckCircle,
+  faUserCircle
 );
 
 function App() {
@@ -94,8 +102,9 @@ function App() {
               <Message message={message.message} type={message.type} />
             )}
             <Switch>
-              <ProtectedRoute exact path='/' component={Chart} />
-              <ProtectedRoute path='/dashboard' component={Dashboard} />
+              <ProtectedRoute path='/profile' component={Profile} />
+              <ProtectedRoute exact path='/' component={Dashboard} />
+              <ProtectedRoute path='/dashboard' component={Chart} />
               <ProtectedRoute
                 exact
                 path='/categories'

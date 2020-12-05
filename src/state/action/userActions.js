@@ -29,6 +29,51 @@ export const createUser = (newUser) => async (dispatch) => {
   }
 };
 
+// update user
+export const updateUser = (userToken, updUser) => async (dispatch) => {
+  try {
+    dispatch(setAuthenticating(true));
+
+    const url = 'users';
+    const reqParms = {
+      method: 'put',
+      data: updUser,
+    };
+    const response = await reqToApi(url, userToken, reqParms);
+    const { data, token, message } = response.data;
+    localStorage.setItem('user', JSON.stringify({ ...data, token }));
+    dispatch(setUser({ ...data, token }));
+    dispatch(setSuccessMessage({ message }));
+  } catch (error) {
+    const { message } = errorHandler(error);
+    dispatch(setFailMessage({ message }));
+  } finally {
+    dispatch(setAuthenticating(false));
+  }
+};
+
+// update user password
+export const updateUserPass = (userToken, passObj) => async (dispatch) => {
+  try {
+    dispatch(setAuthenticating(true));
+
+    const url = 'users/changepassword';
+    const reqParms = {
+      method: 'put',
+      data: passObj,
+    };
+    const response = await reqToApi(url, userToken, reqParms);
+    const { message } = response.data;
+
+    dispatch(setSuccessMessage({ message }));
+  } catch (error) {
+    const { message } = errorHandler(error);
+    dispatch(setFailMessage({ message }));
+  } finally {
+    dispatch(setAuthenticating(false));
+  }
+};
+
 // authenticate user
 export const loginUser = (userDetails) => async (dispatch) => {
   try {
