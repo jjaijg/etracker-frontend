@@ -13,8 +13,10 @@ const reducers = {
   message: messageReducer,
 };
 
+const MIDDLEWARES = process.env.NODE_ENV === 'production' ? [] : [logger];
+
 export default configureStore({
   reducer: reducers,
-  middleware: [...getDefaultMiddleware(), logger],
+  middleware: [...getDefaultMiddleware(), ...MIDDLEWARES],
   devTools: process.env.NODE_ENV !== 'production',
 });
