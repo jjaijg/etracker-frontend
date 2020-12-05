@@ -1,0 +1,25 @@
+.login {
+  box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 45rem;
+  padding: 1rem 1rem 2rem;
+  border-radius: 5px;
+  margin: auto;
+  margin-top: 10%;
+}
+
+.login-header {
+  margin-bottom: 2rem;
+}
+
+@media only screen and (max-width: 700px) {
+  .login {
+    width: auto;
+    margin: 0.2rem;
+    margin-top: 20%;
+    padding: 1rem 1rem 2rem;
+    box-shadow: none;
+  }
+  .login-header {
+    margin: 10px;
+  }
+}

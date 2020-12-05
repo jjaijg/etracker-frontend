@@ -1,14 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, Switch, useHistory } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fab } from '@fortawesome/free-brands-svg-icons';
 import './App.css';
 
+// import HomePage from './components/homepage';
 import Register from './components/register';
 import Login from './components/login';
 import Dashboard from './components/dashboard';
+import CategoryTable from './components/category';
+import CategoryForm from './components/categoryForm';
 import ExpenseTable from './components/expenseTable';
+import ExpenseForm from './components/expenseForm';
+import SideNavBar from './components/sidenav/SideNavBar';
+import Message from './components/message';
+import ProtectedRoute from './route/ProtectedRoute';
 
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fab } from '@fortawesome/free-brands-svg-icons';
 import {
   faCheckSquare,
   faCoffee,
@@ -16,8 +24,23 @@ import {
   faArrowUp,
   faLongArrowAltDown,
   faLongArrowAltUp,
+  faPalette,
+  faMoneyBillWave,
+  faCog,
+  faPowerOff,
+  faWallet,
+  faAngleDoubleRight,
+  faTag,
+  faFileInvoice,
+  faArrowRight,
+  faTable,
+  faHome,
 } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getUserDetails } from './state/action/userActions';
+import { removeMessage } from './state/reducer/messageReducer';
+import Report from './components/report';
+import Chart from './components/charts';
+// import Toast from './components/toast';
 
 library.add(
   fab,
@@ -25,21 +48,91 @@ library.add(
   faCoffee,
   faArrowDown,
   faArrowUp,
+  faArrowRight,
   faLongArrowAltDown,
-  faLongArrowAltUp
+  faLongArrowAltUp,
+  faPalette,
+  faMoneyBillWave,
+  faCog,
+  faPowerOff,
+  faWallet,
+  faAngleDoubleRight,
+  faTag,
+  faFileInvoice,
+  faTable,
+  faHome
 );
 
 function App() {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const { message } = useSelector((state) => state);
+
+  useEffect(() => {
+    history.listen((location) => {
+      dispatch(removeMessage());
+    });
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const { token } = JSON.parse(user);
+      dispatch(getUserDetails(token));
+    }
+    // eslint-disable-next-line
+  }, []);
+
   return (
-    <div className='App'>
-      <h1>
-        Welcom to Expense App!!! <FontAwesomeIcon icon='check-square' />
-      </h1>
-      <ExpenseTable />
-      <Dashboard />
-      <Register />
-      <Login />
-    </div>
+    <Route
+      render={({ location }) => (
+        <>
+          <SideNavBar location={location} history={history} />
+          <main>
+            {message.message && (
+              <Message message={message.message} type={message.type} />
+            )}
+            <Switch>
+              <ProtectedRoute exact path='/' component={Chart} />
+              <ProtectedRoute path='/dashboard' component={Dashboard} />
+              <ProtectedRoute
+                exact
+                path='/categories'
+                component={CategoryTable}
+              />
+              <ProtectedRoute
+                path='/categories/add'
+                name='Add'
+                component={CategoryForm}
+              />
+              <ProtectedRoute
+                path='/categories/:categoryId'
+                name='Update'
+                component={CategoryForm}
+              />
+              <ProtectedRoute
+                exact
+                path='/transactions'
+                component={ExpenseTable}
+              />
+              <ProtectedRoute
+                path='/transactions/add'
+                component={ExpenseForm}
+              />
+              <ProtectedRoute
+                path='/transactions/:txnId'
+                component={ExpenseForm}
+              />
+              <ProtectedRoute path='/reports' component={Report} />
+              <Route path='/register' component={Register} />
+              <Route path='/login' component={Login} />
+              <Route path='*'> Error $404$. Page not found!</Route>
+            </Switch>
+          </main>
+        </>
+      )}
+    />
   );
 }
 

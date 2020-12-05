@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+
 import './index.css';
+// import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import App from './App';
@@ -11,7 +14,9 @@ import store from './state/store';
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </Provider>,
   document.getElementById('root')
 );

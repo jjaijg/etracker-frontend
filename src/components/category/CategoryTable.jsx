@@ -4,14 +4,17 @@ import { Table } from 'react-bootstrap';
 
 import TableData from './TableData';
 import TableHeader from './TableHeader';
-import { getTxns, deleteTxn } from '../../state/action/transactionActions';
 import TableAction from './TableAction';
+import {
+  getCategories,
+  deleteCategory as deleteCatAction,
+} from '../../state/action/categoryActions';
 import Loader from '../loader';
 
-const ExpenseTable = (props) => {
+const CategoryTable = (props) => {
   const dispatch = useDispatch();
-  const { transactions, transactionLoading } = useSelector(
-    (state) => state.transaction
+  const { categories, categoriesLoading } = useSelector(
+    (state) => state.category
   );
   const {
     user: { token },
@@ -22,21 +25,17 @@ const ExpenseTable = (props) => {
 
   const header = [
     { name: '#', field: 'id', sortable: false, render: (rec, ind) => ind + 1 },
-    { name: 'Type', field: 'type', sortable: false },
     { name: 'Category', field: 'name', sortable: true },
-    { name: 'Amount', field: 'amount', sortable: true },
-    { name: 'Date', field: 'tdate', sortable: false },
-    { name: 'Purpose', field: 'description', sortable: true },
     { name: 'Action', field: 'action' },
   ];
 
   useEffect(() => {
-    dispatch(getTxns(token));
+    dispatch(getCategories(token, 'categories/user'));
     // eslint-disable-next-line
-  }, [token]);
+  }, []);
 
-  const deleteExpense = (id) => {
-    dispatch(deleteTxn(token, id));
+  const deleteCategory = (id) => {
+    dispatch(deleteCatAction(token, id));
   };
 
   const tableHeader = header.map((col, ind) => {
@@ -44,12 +43,13 @@ const ExpenseTable = (props) => {
     return {
       ...col,
       render: (rec, ind) => {
+        //  ('cat tab : ', rec, ind);
         return (
           <TableAction
             row={rec}
             id={rec.id}
             rowInd={ind}
-            onDelete={deleteExpense}
+            onDelete={deleteCategory}
           />
         );
       },
@@ -58,7 +58,7 @@ const ExpenseTable = (props) => {
 
   return (
     <>
-      <Loader isLoading={transactionLoading} />
+      <Loader isLoading={categoriesLoading} />
 
       <Table striped bordered hover responsive>
         <TableHeader
@@ -67,10 +67,10 @@ const ExpenseTable = (props) => {
             setSorting({ field, order });
           }}
         />
-        <TableData dataSource={transactions} header={tableHeader} />
+        <TableData dataSource={categories} header={tableHeader} />
       </Table>
     </>
   );
 };
 
-export default ExpenseTable;
+export default CategoryTable;

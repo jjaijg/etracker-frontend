@@ -1,9 +1,10 @@
 import { reqToApi } from '../../api';
+import { errorHandler } from '../../helpers';
+import { setFailMessage, setSuccessMessage } from '../reducer/messageReducer';
 import {
   setAuthenticating,
-  setToken,
   setUser,
-  setAuthenticationStatus,
+  logoutUser as logoutAction,
 } from '../reducer/userReducer';
 
 // create user
@@ -18,14 +19,11 @@ export const createUser = (newUser) => async (dispatch) => {
     };
     const response = await reqToApi(url, null, reqParms);
 
-    if (!response.data.success) {
-      console.log('error : ', response);
-    }
-
-    const { success, message } = response.data;
-    dispatch(setAuthenticationStatus({ success, message }));
+    const { message } = response.data;
+    dispatch(setSuccessMessage({ message }));
   } catch (error) {
-    console.log(error);
+    const { message } = errorHandler(error);
+    dispatch(setFailMessage({ message }));
   } finally {
     dispatch(setAuthenticating(false));
   }
@@ -42,26 +40,19 @@ export const loginUser = (userDetails) => async (dispatch) => {
       data: userDetails,
     };
     const response = await reqToApi(url, null, reqParms);
-    console.log('response : ', response);
-    if (response.data.success) {
-      console.log(response);
-      const { user, token } = response.data;
-      console.log('user : ', response.data);
-      dispatch(setUser({ user, token }));
-    } else {
-      console.log('error : ', response);
-    }
-
-    const { success, message } = response.data;
-    dispatch(setAuthenticationStatus({ success, message }));
+    const { data, token, message } = response.data;
+    localStorage.setItem('user', JSON.stringify({ ...data, token }));
+    dispatch(setUser({ ...data, token }));
+    dispatch(setSuccessMessage({ message }));
   } catch (error) {
-    console.log(error);
+    const { message } = errorHandler(error);
+    dispatch(setFailMessage({ message }));
   } finally {
     dispatch(setAuthenticating(false));
   }
 };
 
-// get user
+// get user profile
 export const getUserDetails = (token) => async (dispatch) => {
   try {
     dispatch(setAuthenticating(true));
@@ -70,15 +61,12 @@ export const getUserDetails = (token) => async (dispatch) => {
     const reqParms = {
       method: 'get',
     };
-    const response = await reqToApi(url, token, reqParms);
-
-    if (!response.error) {
-      console.log(response);
-    } else {
-      console.log('error : ', response);
-    }
+    await reqToApi(url, token, reqParms);
   } catch (error) {
-    console.log(error);
+    // const { message } = errorHandler(error);
+    localStorage.removeItem('user');
+    dispatch(setUser(null));
+    // dispatch(setFailMessage({ message }));
   } finally {
     dispatch(setAuthenticating(false));
   }
@@ -88,10 +76,9 @@ export const getUserDetails = (token) => async (dispatch) => {
 export const logoutUser = () => async (dispatch) => {
   try {
     dispatch(setAuthenticating(true));
-    dispatch(setToken(null));
-    dispatch(setUser(null));
+    dispatch(logoutAction());
   } catch (error) {
-    console.log(error);
+    console.log('Error in logout : ', error);
   } finally {
     dispatch(setAuthenticating(false));
   }
