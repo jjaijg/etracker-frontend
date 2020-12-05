@@ -99,7 +99,7 @@ const SideNavBar = ({ location, history }) => {
           </Link>
         </li>
         <li className='sidenav-item'>
-          <Link to='/' className='sidenav-link'>
+          <Link to='/profile' className='sidenav-link'>
             <FontAwesomeIcon
               size='lg'
               icon='user-circle'
