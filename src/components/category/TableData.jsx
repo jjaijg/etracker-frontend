@@ -4,16 +4,14 @@ const TableData = ({ header, dataSource }) => {
   return (
     <tbody>
       {dataSource.length ? (
-        dataSource.map((transaction, ind) => {
+        dataSource.map((category, ind) => {
           return (
             <tr key={ind}>
               {header.map((col) => {
                 if (col.render) {
-                  return (
-                    <td key={col.field}>{col.render(transaction, ind)}</td>
-                  );
+                  return <td key={col.field}>{col.render(category, ind)}</td>;
                 }
-                return <td key={col.field}>{transaction[col.field]}</td>;
+                return <td key={col.field}>{category[col.field]}</td>;
               })}
             </tr>
           );
@@ -21,7 +19,7 @@ const TableData = ({ header, dataSource }) => {
       ) : (
         <tr>
           <td>
-            <h3>No Transactions done yet!!!</h3>
+            <h3>No Categories created yet!!!</h3>
           </td>
         </tr>
       )}

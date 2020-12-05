@@ -1,0 +1,33 @@
+.register {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+  box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 45rem;
+  padding: 1rem 1rem 2rem;
+  border-radius: 5px;
+  margin-top: 5%;
+}
+
+.register-header {
+  margin-bottom: 2rem;
+}
+
+.invalid-feedback {
+  display: block;
+  color: red;
+  padding: 3px 5px;
+}
+
+@media only screen and (max-width: 700px) {
+  .register {
+    width: auto;
+    margin: 0.2rem;
+    padding: 1rem 1rem 2rem;
+    box-shadow: none;
+  }
+  .register-header {
+    margin: 10px;
+  }
+}

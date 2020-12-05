@@ -1,155 +1,150 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Button, Row, Col } from 'react-bootstrap';
-import { createUser } from '../../state/action/userActions';
+import { createUser, logoutUser } from '../../state/action/userActions';
+import './Register.css';
+import { Link } from 'react-router-dom';
+import Loader from '../loader';
 
-const { Group, Control, Check, Label, Text } = Form;
+const { Group, Control, Label } = Form;
 
-const Register = () => {
+const Register = ({ history }) => {
   const dispatch = useDispatch();
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
-  const [gender, setGender] = useState('');
+  const {
+    user: { authenticating },
+    message,
+  } = useSelector((state) => state);
+
+  const [submitted, setSubmitted] = useState(false);
+  const [profile, setProfile] = useState({
+    username: '',
+    email: '',
+    phone: '',
+    password: '',
+  });
+
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      dispatch(logoutUser());
+    }
+    // eslint-disable-next-line
+  }, []);
+  useEffect(() => {
+    if (message.type === 'alert-success') {
+      history.push('/login');
+    }
+    // eslint-disable-next-line
+  }, [message.type]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProfile((profile) => ({ ...profile, [name]: value }));
+  };
 
   const handleForm = async (e) => {
     e.preventDefault();
     // validate fields
     // format data
-    const newUser = {
-      firstName,
-      lastName,
-      email,
-      number: phone,
-      gender,
-      password,
-    };
+
     // call api to register user
-    dispatch(createUser(newUser));
+    setSubmitted(true);
+    if (profile.username && profile.email && profile.phone && profile.password)
+      dispatch(createUser(profile));
   };
 
   return (
-    <Form>
-      <Group as={Row} controlId='registerFirstName'>
-        <Label column sm={2}>
-          First Name
-        </Label>
-        <Col sm={6}>
-          <Control
-            type='text'
-            placeholder='Enter first name'
-            value={firstName}
-            onChange={(e) => {
-              console.log('first name : ', e.target.value);
-              setFirstName(e.target.value);
-            }}
-          />
-        </Col>
-      </Group>
-      <Group as={Row} controlId='registerLastName'>
-        <Label column sm={2}>
-          Last Name
-        </Label>
-        <Col sm={6}>
-          <Control
-            type='text'
-            placeholder='Enter last name'
-            value={lastName}
-            onChange={(e) => {
-              console.log('last name : ', e.target.value);
-              setLastName(e.target.value);
-            }}
-          />
-        </Col>
-      </Group>
-      <Group as={Row} controlId='registerEmail'>
-        <Label column sm={2}>
-          Email
-        </Label>
-        <Col sm={6}>
-          <Control
-            type='text'
-            placeholder='Enter email'
-            value={email}
-            onChange={(e) => {
-              console.log('email : ', e.target.value);
-              setEmail(e.target.value);
-            }}
-          />
-        </Col>
-      </Group>
-      <Group as={Row} controlId='registerNumber'>
-        <Label column sm={2}>
-          Phone
-        </Label>
-        <Col sm={6}>
-          <Control
-            type='text'
-            placeholder='Enter phone number'
-            value={phone}
-            onChange={(e) => {
-              console.log('Phome : ', e.target.value);
-              setPhone(e.target.value);
-            }}
-          />
-        </Col>
-      </Group>
-      <Group as={Row} controlId='registerGender'>
-        <Label as='legend' column sm={2}>
-          Gender
-        </Label>
-        <Col sm={6}>
-          <Check
-            type='radio'
-            label='Male'
-            name='gender'
-            id='male'
-            value='male'
-            checked={gender === 'male'}
-            onChange={(e) => {
-              console.log('gender : ', e.target.value);
+    <div className='container register'>
+      <h3 className='text-center register-header'>Signup</h3>
+      <Form onSubmit={handleForm}>
+        <Group as={Row} controlId='registerUsername'>
+          <Label column sm={2}>
+            Username
+          </Label>
+          <Col sm={10}>
+            <Control
+              type='text'
+              name='username'
+              placeholder='Enter Username'
+              value={profile.username}
+              onChange={handleChange}
+            />
+            {submitted && !profile.username && (
+              <span className='invalid-feedback'>Username is required</span>
+            )}
+          </Col>
+        </Group>
+        <Group as={Row} controlId='registerEmail'>
+          <Label column sm={2}>
+            Email
+          </Label>
+          <Col sm={10}>
+            <Control
+              type='email'
+              name='email'
+              placeholder='Enter email'
+              value={profile.email}
+              onChange={handleChange}
+            />
+            {submitted && !profile.email && (
+              <span className='invalid-feedback'>Email is required</span>
+            )}
+          </Col>
+        </Group>
+        <Group as={Row} controlId='registerPhone'>
+          <Label column sm={2}>
+            Phone
+          </Label>
+          <Col sm={10}>
+            <Control
+              type='tel'
+              name='phone'
+              placeholder='Enter phone number'
+              value={profile.phone}
+              onChange={handleChange}
+            />
+            {submitted && !profile.phone && (
+              <span className='invalid-feedback'>Phone is required</span>
+            )}
+          </Col>
+        </Group>
 
-              setGender(e.target.value);
-            }}
-          />
-          <Check
-            type='radio'
-            label='Female'
-            name='gender'
-            id='female'
-            value='female'
-            checked={gender === 'female'}
-            onChange={(e) => {
-              console.log('gender : ', e.target.value);
-              setGender(e.target.value);
-            }}
-          />
-        </Col>
-      </Group>
-      <Group as={Row} controlId='registerPassword'>
-        <Label column sm={2}>
-          Password
-        </Label>
-        <Col sm={6}>
-          <Control
-            type='password'
-            placeholder='Password'
-            value={password}
-            onChange={(e) => {
-              console.log('password : ', e.target.value);
-              setPassword(e.target.value);
-            }}
-          />
-        </Col>
-      </Group>
+        <Group as={Row} controlId='registerPassword'>
+          <Label column sm={2}>
+            Password
+          </Label>
+          <Col sm={10}>
+            <Control
+              type='password'
+              name='password'
+              placeholder='Password'
+              value={profile.password}
+              onChange={handleChange}
+            />
+            {submitted && !profile.password && (
+              <span className='invalid-feedback'>Password is required</span>
+            )}
+          </Col>
+        </Group>
 
-      <Button onClick={handleForm} variant='primary' type='submit'>
-        Register
-      </Button>
-    </Form>
+        <Row className='mt-5'>
+          <Col md={{ span: 6, offset: 2 }} className='mb-2'>
+            <Button
+              variant='success'
+              type='submit'
+              block
+              disabled={authenticating}
+            >
+              {authenticating ? 'Registering' : 'Register'}
+            </Button>
+          </Col>
+          <Col>
+            <Link to='/login'>Already Registered? Login here</Link>
+          </Col>
+        </Row>
+      </Form>
+      <Loader isLoading={authenticating} />
+    </div>
   );
 };
 

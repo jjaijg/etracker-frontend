@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:3100/api/';
+const baseUrl =
+  process.env.NODE_ENV !== 'production'
+    ? 'http://localhost:3100/api/'
+    : 'https://mtransactions.herokuapp.com/api/';
 
 const REQ_HEADER = {
   timeout: 15000,
@@ -13,7 +16,6 @@ const REQ_HEADER = {
 const makeRequestCreator = () => {
   return async (url, token, reqParms) => {
     try {
-      console.log('REQ PARMS :', reqParms);
       if (token) REQ_HEADER.headers.Authorization = `Bearer ${token}`; //'Bearer ' + token
 
       return await axios({
@@ -23,17 +25,8 @@ const makeRequestCreator = () => {
       });
       // const result = res.data;
     } catch (error) {
-      console.log('Something went wrong: ', error.message);
-      return _throwError(error);
+      throw error;
     }
-  };
-};
-
-const _throwError = (error) => {
-  return {
-    error: true,
-    message: error.message,
-    status: error.status,
   };
 };
 

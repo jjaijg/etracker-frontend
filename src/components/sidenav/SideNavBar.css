@@ -1,0 +1,129 @@
+.brand-logo {
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  letter-spacing: 0.3ch;
+  width: 100%;
+  cursor: pointer;
+  top: 0;
+}
+
+.brand-logo .nav-icon {
+  transform: rotate(0deg);
+  transition: transform var(--transition-speed);
+}
+
+.sidenav {
+  width: 5rem;
+  height: 100vh;
+  position: fixed;
+  background-color: var(--bg-primary);
+  z-index: 9999;
+  transition: 200ms ease;
+}
+
+.sidenav:hover {
+  width: 16rem;
+}
+
+.sidenav:hover .brand-logo .nav-icon {
+  filter: grayscale(0%) opacity(1);
+
+  color: var(--text-secondary);
+  margin-left: auto;
+  transform: rotate(-180deg);
+}
+
+.sidenav:hover .sidenav-link-text {
+  display: block;
+}
+
+.sidenav-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.sidenav-item {
+  cursor: pointer;
+  width: 100%;
+}
+
+.sidenav-item:last-child {
+  margin-top: auto;
+}
+
+.sidenav-sub-item {
+  display: none;
+}
+
+.sidenav-item:hover .sidenav-sub-item {
+  display: block;
+}
+
+.sidenav-link {
+  display: flex;
+  align-items: center;
+  height: 4rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  filter: grayscale(100%) opacity(0.7);
+  transition: var(--transition-speed);
+}
+
+.sidenav-link:hover {
+  filter: grayscale(0%) opacity(1);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.sidenav-sub-item .sidenav-link {
+  height: 3rem;
+  padding-left: 1rem;
+}
+
+.sidenav-link-text {
+  display: none;
+  margin-left: 1rem;
+}
+
+.sidenav-link .nav-icon {
+  min-width: 2rem;
+  margin: 0 1.5rem;
+}
+
+@media only screen and (max-width: 700px) {
+  .brand-logo .nav-icon {
+    font-size: 1.8rem;
+  }
+  .sidenav {
+    height: 3rem;
+    width: 4rem;
+    transition: 600ms ease;
+    top: 0;
+  }
+
+  .sidenav-item {
+    display: none;
+  }
+
+  .sidenav:hover {
+    height: 100vh;
+  }
+
+  .sidenav:hover .sidenav-item {
+    display: block;
+  }
+
+  .sidenav-link {
+    height: 3rem;
+  }
+}
