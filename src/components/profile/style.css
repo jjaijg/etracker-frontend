@@ -1,0 +1,45 @@
+.profile-title {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.profile-title > .profile-btn {
+  font-size: 18px;
+}
+
+.profile-text {
+  font-size: 1.2rem;
+  margin: 20px;
+}
+
+.profile-text > span {
+  margin-left: 10px;
+  font-weight: 500;
+}
+
+.profile-input {
+  font-size: 1rem;
+  display: inline;
+  width: auto;
+  font-weight: 500;
+}
+
+.profile-btn {
+  color: deepskyblue;
+  font-size: 15px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.disabled {
+  color: #777676;
+  cursor: not-allowed;
+}
+
+.pass-container {
+  display: none;
+}
+
+.show-pass {
+  display: block;
+}

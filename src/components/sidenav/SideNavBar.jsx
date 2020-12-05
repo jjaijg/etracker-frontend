@@ -98,6 +98,16 @@ const SideNavBar = ({ location, history }) => {
             <span className='sidenav-link-text'>Reports</span>
           </Link>
         </li>
+        <li className='sidenav-item'>
+          <Link to='/' className='sidenav-link'>
+            <FontAwesomeIcon
+              size='lg'
+              icon='user-circle'
+              className='nav-icon'
+            />
+            <span className='sidenav-link-text'>Profile</span>
+          </Link>
+        </li>
         {user ? (
           <li
             className='sidenav-item sidenav-link'

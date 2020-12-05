@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col, Button } from 'react-bootstrap';
-import moment from 'moment';
+import { Container, Row, Col, Form } from 'react-bootstrap';
 
 import { getTxns } from '../../state/action/transactionActions';
 import DisplayChart from './DisplayChart';
 import { removeMessage } from '../../state/reducer/messageReducer';
+import { splitTxns } from '../../helpers';
+
+const { Control, Label } = Form;
 
 const Charts = () => {
   const dispatch = useDispatch();
@@ -20,6 +22,8 @@ const Charts = () => {
 
   const [incomes, setIncomes] = useState({});
   const [expenses, setExpenses] = useState({});
+  const [txnsByCat, setTxnsByCat] = useState({});
+  const [txnsByType, setTxnsByType] = useState({});
   const [chart, setChart] = useState('line');
 
   useEffect(() => {
@@ -29,9 +33,13 @@ const Charts = () => {
 
   useEffect(() => {
     if (transactions) {
-      const { incomeTxns, expenseTxns } = formatDailyTxns();
+      const { incomeTxns, expenseTxns, txnTotal, txnByCategory } = splitTxns(
+        transactions
+      );
       setIncomes(incomeTxns);
       setExpenses(expenseTxns);
+      setTxnsByCat(txnByCategory);
+      setTxnsByType(txnTotal);
     }
     // eslint-disable-next-line
   }, [transactions]);
@@ -41,69 +49,63 @@ const Charts = () => {
     // eslint-disable-next-line
   }, [message.message]);
 
-  const formatDailyTxns = () => {
-    const txns = Array.from(transactions);
-    // sum amount by date
-    let incomeTxns = {};
-    let expenseTxns = {};
-
-    txns.forEach((txn) => {
-      let tdate = moment(txn.tdate).format('DD-MM-YYYY');
-      if (txn.type === 'income') {
-        if (incomeTxns.hasOwnProperty(tdate)) {
-          incomeTxns[tdate] += txn.amount;
-        } else {
-          incomeTxns[tdate] = txn.amount;
-        }
-      } else {
-        if (expenseTxns.hasOwnProperty(tdate)) {
-          expenseTxns[tdate] += txn.amount;
-        } else {
-          expenseTxns[tdate] = txn.amount;
-        }
-      }
-    });
-    return { incomeTxns, expenseTxns };
-  };
-
   return (
-    <div>
+    <Container fluid>
       <Row>
-        <Col sm={2}>
-          <Button onClick={() => setChart('line')}>Line Chart</Button>
-        </Col>
-        <Col sm={2}>
-          <Button onClick={() => setChart('bar')}>Bar Chart</Button>
-        </Col>
-        <Col sm={2}>
-          <Button onClick={() => setChart('pie')}> Pie Chart</Button>
+        <Col sm={10} md={6} lg={3}>
+          <Label>Choose Chart Type : </Label>
+          <Control
+            as='select'
+            value={chart}
+            onChange={(e) => setChart(e.target.value)}
+          >
+            <option value='line'>Line</option>
+            <option value='bar'>Bar</option>
+            <option value='pie'>Pie</option>
+          </Control>
         </Col>
       </Row>
+      <hr />
       <Row>
-        {/* {Object.entries(incomes).length ? ( */}
-        <Col className='m-3'>
+        <Col className='m-3' sm={12} md={5} lg={5}>
           <DisplayChart
             chartType={chart}
             label={'Income Chart'}
             dataSource={incomes}
+            xLabel='Transaction Dates'
+            yLabel='Amount'
           />
         </Col>
-        {/* ) : (
-          <h3 className='m-5'>No incomes Added!</h3>
-        )} */}
-        {/* {Object.entries(incomes).length ? ( */}
-        <Col className='m-3'>
+
+        <Col className='m-3' sm={12} md={5} lg={5}>
           <DisplayChart
             chartType={chart}
             label={'Expense Chart'}
             dataSource={expenses}
+            xLabel='Transaction Dates'
+            yLabel='Amount'
           />
         </Col>
-        {/* // ) : (
-        //   <h3 className='m-5 '>No expenses Added!</h3>
-        // )} */}
+        <Col className='m-3' sm={12} md={5} lg={5}>
+          <DisplayChart
+            chartType={chart}
+            label={'Transation Chart based on Category'}
+            dataSource={txnsByCat}
+            xLabel='Categories'
+            yLabel='Amount'
+          />
+        </Col>
+        <Col className='m-3' sm={12} md={5} lg={5}>
+          <DisplayChart
+            chartType={chart}
+            label={'Transation Chart based on Type'}
+            dataSource={txnsByType}
+            xLabel='Transction Type'
+            yLabel='Amount'
+          />
+        </Col>
       </Row>
-    </div>
+    </Container>
   );
 };
 
